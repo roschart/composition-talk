@@ -1,0 +1,5 @@
+
+           foo: a ------> b
+           boo:           b ------> c
+comp(boo, foo): a ----------------> c
+pipe(foo, boo): a ----------------> c
