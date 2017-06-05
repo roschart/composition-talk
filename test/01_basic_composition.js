@@ -62,11 +62,11 @@ describe('Composition', () => {
     })
     it('Array Composition', () => {
       Array.prototype.done = function (cb) { cb(this) }  // eslint-disable-line
-      Array.of(5)
+      Array.of(5, 7)
           .map(inc)
           .map(dup)
           .map(inc)
-          .done(x => expect(x).to.deep.equal([13]))
+          .done(x => expect(x).to.deep.equal([13, 17]))
     })
     it('Stream Composition', () => {
       var s = stream(5)
