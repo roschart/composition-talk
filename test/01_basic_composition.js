@@ -1,5 +1,6 @@
 
 const {expect}  = require('chai')
+const {stream} = require('flyd')
 
 const add_pen = (msg='') => msg + "pen"
 const add_apple = (msg='') => msg + "Apple"
@@ -19,7 +20,7 @@ const Composition = x => ({
   done: f => f(x)
 })
 
-
+Composition.of =x=>Composition(x)
 
 
 describe('Composition', () => {
@@ -40,7 +41,7 @@ describe('Composition', () => {
 
   describe('Algebraic compostion', ()=>{
     it('Identity with return', () => {
-      const ap_comp = Composition()
+      const ap_comp = Composition.of()
                         .map(add_apple)
                         .map(add_space)
                         .map(add_pen)
@@ -48,19 +49,35 @@ describe('Composition', () => {
     })
 
     it('Identity without context exit', () => {
-        Composition()
+        Composition.of()
             .map(add_apple)
             .map(add_space)
             .map(add_pen)
-            .done(x => expect(x,'Apple pen'))
+            .done(x => expect(x).to.be.equal('Apple pen'))
     })
 
     it('Numeric example', () => {
-        Composition(5)
+        Composition.of(5)
             .map(inc)
             .map(dup)
             .map(inc)
-            .done(x => expect(x, 13))
+            .done(x => expect(x).to.be.equal(13))
+    })
+    it('Array Composition', () => {
+      Array.prototype.done = function (cb) {cb(this)};
+        Array.of(5)
+            .map(inc)
+            .map(dup)
+            .map(inc)
+            .done(x => expect(x).to.deep.equal([13]))
+    })
+    it('Stream Composition',()=>{
+      var s= stream(5)
+            .map(inc)
+            .map(dup)
+            .map(inc)
+      expect(s()).to.be.equal(13)
+
     })
   })
 })
