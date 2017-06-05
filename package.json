@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "linter": "standard"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +14,14 @@
     "chai": "^4.0.0",
     "flyd": "^0.2.4",
     "mocha": "^3.4.2"
+  },
+  "devDependencies": {
+    "standard": "^10.0.2"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it"
+    ]
   }
 }
