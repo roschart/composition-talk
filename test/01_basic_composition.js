@@ -2,23 +2,7 @@
 const {expect} = require('chai')
 const {stream} = require('flyd')
 
-const addPen = (msg = '') => msg + 'pen'
-const addApple = (msg = '') => msg + 'Apple'
-const addSpace = (msg = '') => msg + ' '
-
-const comp1 = (f, g) => x => f(g(x))
-const comp = (...funs) => x => funs.reduceRight((y, f) => f(y), x)
-
-const inc = x => x + 1
-const dup = x => x * 2
-
-const Composition = x => ({
-  map: f => Composition(f(x)), // then, pipe, select
-  return: () => x,
-  done: f => f(x)
-})
-
-Composition.of = x => Composition(x)
+const { addPen, addApple, addSpace, comp1, comp, inc, dup, Composition } = require('../basic.js')
 
 describe('Composition', () => {
   describe('Pointless compostion', () => {
