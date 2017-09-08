@@ -16,12 +16,21 @@ namespace CompositionTest
         public class BasicComposition
         {
             [Fact]
-            public void PointFreeComposite()
+            public void PointFreeComposition()
             {
                 var logic = J.Composite<int, int, int, int>(Business.Inc
                                                         , Business.Double
                                                         , Business.Pow);
                 Assert.Equal(expected: 19, actual: logic(3));
+            }
+
+            [Fact]
+            public void IdentityComposition(){
+                var result= Identity<int>.Of(3)
+                                         .Map(Business.Pow)
+                                         .Map(Business.Double)
+                                         .Map(Business.Inc);
+                Assert.Equal(expected:19,actual:result.Value);
             }
         }
     }
