@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Composition;
@@ -31,6 +33,14 @@ namespace CompositionTest
                                          .Map(Business.Double)
                                          .Map(Business.Inc);
                 Assert.Equal(expected:19,actual:result.Value);
+            }
+            [Fact]
+            public void IdentityCompositionIsAStupidThing(){
+                var result = new List<int>(){3}
+                                         .Select(Business.Pow)
+                                         .Select(Business.Double)
+                                         .Select(Business.Inc);
+                Assert.Equal(expected:19,actual:result.First());
             }
         }
     }
