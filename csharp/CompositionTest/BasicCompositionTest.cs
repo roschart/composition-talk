@@ -53,7 +53,14 @@ namespace CompositionTest
             Assert.Equal(expected: double.NaN, actual: b);
             var c= B.Pow(b);
             Assert.Equal(expected: double.NaN, actual: b);
-            
+        }
+
+        [Fact]
+        public void MathInCsharpIsTrikyBut()
+        {
+            var a = Math.Sqrt(-4);
+            var b= B.Pow(a);
+            Assert.Throws<OverflowException>(()=>Convert.ToInt32(b));
         }
     }
 }
