@@ -42,6 +42,11 @@ namespace CompositionTest
                                          .Select(Business.Double)
                                          .Select(Business.Pow);
                 Assert.Equal(expected:64,actual:result.First());
+                //or
+                var a = Business.Inc(3);
+                var b = Business.Double(a);
+                var c = Business.Pow(b);
+                Assert.Equal(expected:64,actual:c);
             }
         }
     }
