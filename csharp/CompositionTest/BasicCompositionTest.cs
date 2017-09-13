@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Composition;
 using Xunit;
+using B=Composition.Business;
 
 namespace CompositionTest
 {
@@ -14,33 +15,41 @@ namespace CompositionTest
             public void PointFreeComposition()
             {
                 var logic = J.Composite<int, int, int, double>
-                                            (Business.Pow
-                                            , Business.Double
-                                            , Business.Inc);
+                                            (B.Pow
+                                            , B.Double
+                                            , B.Inc);
                 Assert.Equal(expected: 64, actual: logic(3));
             }
 
             [Fact]
             public void IdentityComposition(){
                 var result= Identity<int>.Of(3)
-                                         .Map(Business.Inc)
-                                         .Map(Business.Double)
-                                         .Map(Business.Pow);
+                                         .Map(B.Inc)
+                                         .Map(B.Double)
+                                         .Map(B.Pow);
                 Assert.Equal(expected:64,actual:result.Value);
             }
             [Fact]
             public void IdentityCompositionIsAStupidThing(){
                 var result = new List<int>(){3}
-                                         .Select(Business.Inc)
-                                         .Select(Business.Double)
-                                         .Select(Business.Pow);
+                                         .Select(B.Inc)
+                                         .Select(B.Double)
+                                         .Select(B.Pow);
                 Assert.Equal(expected:64,actual:result.First());
                 //or
-                var a = Business.Inc(3);
-                var b = Business.Double(a);
-                var c = Business.Pow(b);
+                var a = B.Inc(3);
+                var b = B.Double(a);
+                var c = B.Pow(b);
                 Assert.Equal(expected:64,actual:c);
+                Assert.Equal(expected:64, actual:B.Pow(B.Double(B.Inc(3))));
             }
+            [Fact]
+            public void WhatHappenWithErrors(){
+                
+
+            }
+
+
         }
     }
 
