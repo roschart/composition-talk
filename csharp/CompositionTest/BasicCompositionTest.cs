@@ -62,6 +62,15 @@ namespace CompositionTest
             var b= B.Pow(a);
             Assert.Throws<OverflowException>(()=>Convert.ToInt32(b));
         }
+
+        [Fact]
+        public void IdentityNotSolveTheProblem()
+        {
+            Assert.Throws<OverflowException>(()=>
+                    Identity<int>.Of(-4)
+                        .Map(B.Pow)
+                        .Map(Convert.ToInt32));
+        }
     }
 }
 
