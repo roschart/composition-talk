@@ -1,3 +1,4 @@
+using System;
 using Composition;
 using Xunit;
 using B = Composition.Business;
@@ -9,29 +10,51 @@ namespace CompositionTest
         [Fact]
         public void RightIsLikeIdentity()
         {
-            var result = Either<string,int>.Right(3)
+            var result = Either<string, int>.Right(3)
                                      .Map(B.Inc)
                                      .Map(B.Double)
                                      .Map(B.Pow);
-    
-            result.Fold(null,x=>Assert.Equal(expected: 64,actual:x));
+
+            result.Fold(null, x => Assert.Equal(expected: 64, actual: x));
             Assert.Equal(expected: 64, actual: result.OrDefault(0));
         }
 
         [Fact]
-         public void ButLeftNotChangeNothing()
+        public void ButLeftNotChangeNothing()
         {
-            var result = Either<int,int>.Left(3)
+            var result = Either<int, int>.Left(3)
                                      .Map(B.Inc)
                                      .Map(B.Double)
                                      .Map(B.Pow);
-    
-            result.Fold(x=>Assert.Equal(expected: 3,actual:x),null);
+
+            result.Fold(x => Assert.Equal(expected: 3, actual: x), null);
             Assert.Equal(expected: 0, actual: result.OrDefault(0));
         }
 
+        [Fact]
+        public void TransformExceptionToEither()
+        {
+            var result = Either<Exception, int>
+                            .Try(() => Convert.ToInt32(Math.Sqrt(-4)));
+            Assert.Equal(expected: 0, actual: result.OrDefault(0));
+            result.Fold(x => Assert.IsType(Type.GetType("System.OverflowException"), x), null);
 
-        
+        }
+
+        [Fact]
+        public void EitherCanManageProblemsButUgglyFuctor()
+        {
+            Func<double, IEither<Exception, int>> SafeConvert =
+                    x => Either<Exception, int>.Try(() => Convert.ToInt32(x));
+
+            var result= Either<Exception, double>.Of(4)
+            .Map(Math.Sqrt)
+            .Map(SafeConvert); 
+
+
+            var actual= result.OrDefault(Either<Exception,int>.Of(0)).OrDefault(0);
+            Assert.Equal(expected: 2, actual: actual);
+        }
     }
 }
 

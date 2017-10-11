@@ -12,10 +12,23 @@ namespace Composition
     public static class Either<A, B>
     {
         public static IEither<A, B> Right(B v) => new _Right(v);
+        public static IEither<A, B> Of(B v) => new _Right(v);
         public static IEither<A, B> Left(A v) => new _Left(v);
+         public static IEither<Exception,B> Try(Func<B> f)
+        {
+            try
+            {
+                return Either<Exception,B>.Right(f());
+            }
+            catch (Exception e)
+            {
+                
+                return Either<Exception,B>.Left(e);
+            }
+        }
 
 
-        public class _Right : IEither<A, B>
+        private class _Right : IEither<A, B>
         {
             private B value;
 
@@ -30,7 +43,7 @@ namespace Composition
             public B OrDefault(B v) => this.value;
         }
 
-        public class _Left: IEither<A, B>
+        private class _Left: IEither<A, B>
         {
             private A value;
             public _Left(A value) => this.value = value;
@@ -40,5 +53,7 @@ namespace Composition
             public void Fold(Action<A> f, Action<B> g) => f(this.value);
             public B OrDefault(B v) => v;
         }
+
+       
     }
 }
