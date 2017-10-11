@@ -9,7 +9,7 @@ namespace CompositionTest
         [Fact]
         public void RightIsLikeIdentity()
         {
-            var result = Right<string,int>.Of(3)
+            var result = Either<string,int>.Right(3)
                                      .Map(B.Inc)
                                      .Map(B.Double)
                                      .Map(B.Pow);
@@ -21,7 +21,7 @@ namespace CompositionTest
         [Fact]
          public void ButLeftNotChangeNothing()
         {
-            var result = Left<int,int>.Of(3)
+            var result = Either<int,int>.Left(3)
                                      .Map(B.Inc)
                                      .Map(B.Double)
                                      .Map(B.Pow);

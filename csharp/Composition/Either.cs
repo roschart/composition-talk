@@ -2,40 +2,43 @@ using System;
 
 namespace Composition
 {
-    public interface Either<A, B>
+    public interface IEither<A, B>
     {
-        Either<A, C> Map<C>(Func<B, C> f);
+        IEither<A, C> Map<C>(Func<B, C> f);
         void Fold(Action<A> f, Action<B> g);
-         B OrDefault(B v);
+        B OrDefault(B v);
     }
 
-    public class Right<A, B> : Either<A, B>
+    public static class Either<A, B>
     {
-        private B value;
+        public static IEither<A, B> Right(B v) => new _Right(v);
+        public static IEither<A, B> Left(A v) => new _Left(v);
 
-        public Right(B value)
+
+        public class _Right : IEither<A, B>
         {
-            this.value = value;
-        }
-        public static Either<A, B> Of(B value) => new Right<A, B>(value);
+            private B value;
 
-        public Either<A, C> Map<C>(Func<B, C> f)
+            public _Right(B value)
+            {
+                this.value = value;
+            }
+            public static IEither<A, B> Of(B value) => new _Right(value);
+
+            public IEither<A, C> Map<C>(Func<B, C> f)  => Either<A,C>.Right(f(this.value));
+            public void Fold(Action<A> f, Action<B> g) => g(this.value);
+            public B OrDefault(B v) => this.value;
+        }
+
+        public class _Left: IEither<A, B>
         {
-            return Right<A, C>.Of(f(this.value));
+            private A value;
+            public _Left(A value) => this.value = value;
+            public static IEither<A, B> Of(A value) => Either<A, B>.Left(value);
+
+            public IEither<A, C> Map<C>(Func<B, C> f) => Either<A,C>.Left(this.value);
+            public void Fold(Action<A> f, Action<B> g) => f(this.value);
+            public B OrDefault(B v) => v;
         }
-        public void Fold(Action<A> f, Action<B> g) => g(this.value);
-        public B OrDefault(B v) => this.value;
     }
-
-    public class Left<A, B> : Either<A, B>
-    {
-        private A value;
-        public Left(A value) => this.value = value;
-        public static Either<A, B> Of(A value) => new Left<A, B>(value);
-
-        public Either<A, C> Map<C>(Func<B, C> f) => new Left<A, C>(this.value);
-        public void Fold(Action<A> f, Action<B> g) => f(this.value);
-        public B OrDefault(B v) => v;
-    }
-
 }
