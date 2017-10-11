@@ -12,16 +12,6 @@ namespace CompositionTest
     public class BasicCompositionTest
     {
         [Fact]
-        public void PointFreeComposition()
-        {
-            var logic = J.Composite<int, int, int, int>
-                                        (B.Pow
-                                        , B.Double
-                                        , B.Inc);
-            Assert.Equal(expected: 64, actual: logic(3));
-        }
-
-        [Fact]
         public void IdentityComposition()
         {
             var result = Identity<int>.Of(3)
@@ -31,6 +21,7 @@ namespace CompositionTest
             Assert.Equal(expected: 64, actual: result.Value);
         }
         [Fact]
+
         public void IdentityCompositionIsAStupidThing()
         {
             var result = new List<int>() { 3 }
