@@ -24,11 +24,19 @@ namespace CompositionTest
         [Fact]
         public void AsociativeLawFunctor()
         {
-            //u.map(x => f(g(x))) is equivalent to u.map(g).map(f)
+            //F.map(x => f(g(x))) is equivalent to F.map(g).map(f)
             var result=Identity<int>.Of(3)
                 .Map(J.Composite<int, int, int, int>(B.Pow, B.Double, B.Inc));
-            Assert.Equal(expected: 65, actual: result.Value);
+            Assert.Equal(expected: 64, actual: result.Value);
 
+        }
+             [Fact]
+        public void IdentityLawFunctor()
+        {
+            //F.map(a => a) is equivalent to F (identity)
+            var result1=Identity<int>.Of(3);
+            var result2 = Identity<int>.Of(3).Map(a=>a);
+            Assert.Equal(expected: new int [3,3], actual: new int [result1.Value, result2.Value]);
         }
 
         [Fact]
