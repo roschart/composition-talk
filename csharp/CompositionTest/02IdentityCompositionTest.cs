@@ -25,34 +25,28 @@ namespace CompositionTest
         public void AsociativeLawFunctor()
         {
             //F.map(x => f(g(x))) is equivalent to F.map(g).map(f)
-            var result=Identity<int>.Of(3)
+            var result = Identity<int>.Of(3)
                 .Map(J.Composite<int, int, int, int>(B.Pow, B.Double, B.Inc));
             Assert.Equal(expected: 64, actual: result.Value);
 
         }
-             [Fact]
+        [Fact]
         public void IdentityLawFunctor()
         {
             //F.map(a => a) is equivalent to F (identity)
-            var result1=Identity<int>.Of(3);
-            var result2 = Identity<int>.Of(3).Map(a=>a);
-            Assert.Equal(expected: new int [3,3], actual: new int [result1.Value, result2.Value]);
+            var result1 = Identity<int>.Of(3);
+            var result2 = Identity<int>.Of(3).Map(a => a);
+            Assert.Equal(expected: new int[3, 3], actual: new int[result1.Value, result2.Value]);
         }
 
         [Fact]
-        public void IdentityCompositionIsAStupidThing()
+        public void YouKnowIdentiyButWithOtherName()
         {
             var result = new List<int>() { 3 }
                                      .Select(B.Inc)
                                      .Select(B.Double)
                                      .Select(B.Pow);
             Assert.Equal(expected: 64, actual: result.First());
-            //or
-            var a = B.Inc(3);
-            var b = B.Double(a);
-            var c = B.Pow(b);
-            Assert.Equal(expected: 64, actual: c);
-            Assert.Equal(expected: 64, actual: B.Pow(B.Double(B.Inc(3))));
         }
         [Fact]
         public void MathInCsharpIsTriky()
