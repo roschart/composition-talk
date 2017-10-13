@@ -66,6 +66,23 @@ namespace CompositionTest
 
             result.Fold(null, x => x.Fold(y => Assert.IsType(Type.GetType("System.OverflowException"), y), null));
         }
+
+        [Fact]
+        public void ChainToResque()
+        {
+
+            var result1 = Either<Exception, double>.Of(4)
+                .Map(Math.Sqrt)
+                .Chain(J.SafeConvertToInt32);
+            Assert.Equal(expected: 2, actual: result1.OrDefault(0));
+
+            var result2 = Either<Exception, double>.Of(-4)
+                .Map(Math.Sqrt)
+                .Chain(J.SafeConvertToInt32);
+            Assert.Equal(expected: 0, actual: result2.OrDefault(0));
+            result2.Fold(x => Assert.IsType(Type.GetType("System.OverflowException"), x), null);
+
+        }
     }
 }
 

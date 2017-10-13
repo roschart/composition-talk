@@ -7,6 +7,10 @@ namespace Composition
         IEither<A, C> Map<C>(Func<B, C> f);
         void Fold(Action<A> f, Action<B> g);
         B OrDefault(B v);
+
+        // chain :: Chain m => m a ~> (a -> m b) -> m b
+        //(>>=) :: Either e a -> (a -> Either e b) -> Either e b 
+        IEither<A,C> Chain<C>(Func<B, IEither<A, C>> f);
     }
 
     public static class Either<A, B>
@@ -39,8 +43,11 @@ namespace Composition
             public static IEither<A, B> Of(B value) => new _Right(value);
 
             public IEither<A, C> Map<C>(Func<B, C> f)  => Either<A,C>.Right(f(this.value));
+            public IEither<A, C> Chain<C>(Func<B, IEither<A, C>> f) => f(this.value);
+            
             public void Fold(Action<A> f, Action<B> g) => g(this.value);
             public B OrDefault(B v) => this.value;
+
         }
 
         private class _Left: IEither<A, B>
@@ -50,8 +57,11 @@ namespace Composition
             public static IEither<A, B> Of(A value) => Either<A, B>.Left(value);
 
             public IEither<A, C> Map<C>(Func<B, C> f) => Either<A,C>.Left(this.value);
+            public IEither<A, C> Chain<C>(Func<B, IEither<A, C>> f)=> Either<A,C>.Left(this.value);
+            
             public void Fold(Action<A> f, Action<B> g) => f(this.value);
             public B OrDefault(B v) => v;
+          
         }
 
        
