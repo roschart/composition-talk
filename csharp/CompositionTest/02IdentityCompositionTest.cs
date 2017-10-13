@@ -48,18 +48,10 @@ namespace CompositionTest
                                      .Select(B.Pow);
             Assert.Equal(expected: 64, actual: result.First());
         }
-        [Fact]
-        public void MathInCsharpIsTriky()
-        {
-            var a = B.Inc(-3);
-            var b = Math.Sqrt(a);
-            Assert.Equal(expected: double.NaN, actual: b);
-            var c = B.Pow(b);
-            Assert.Equal(expected: double.NaN, actual: b);
-        }
+     
 
         [Fact]
-        public void MathInCsharpIsTrikyBut()
+        public void WhatHappenWithExceptions()
         {
             var a = Math.Sqrt(-4);
             var b = B.Pow(a);

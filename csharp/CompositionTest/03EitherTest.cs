@@ -47,13 +47,26 @@ namespace CompositionTest
             Func<double, IEither<Exception, int>> SafeConvert =
                     x => Either<Exception, int>.Try(() => Convert.ToInt32(x));
 
-            var result= Either<Exception, double>.Of(4)
+            var result = Either<Exception, double>.Of(4)
             .Map(Math.Sqrt)
-            .Map(SafeConvert); 
-
-
-            var actual= result.OrDefault(Either<Exception,int>.Of(0)).OrDefault(0);
+            .Map(SafeConvert);
+            var actual = result.OrDefault(Either<Exception, int>.Of(0)).OrDefault(0);
             Assert.Equal(expected: 2, actual: actual);
+            result.Fold(null, x => x.Fold(null, y => Assert.Equal(expected: 2, actual: y)));
+        }
+
+        [Fact]
+        public void EitherCanManageProblemsButUgglyFuctoWithTheException()
+        {
+            Func<double, IEither<Exception, int>> SafeConvert =
+                    x => Either<Exception, int>.Try(() => Convert.ToInt32(x));
+
+            var result = Either<Exception, double>.Of(-4)
+            .Map(Math.Sqrt)
+            .Map(SafeConvert);
+            var actual = result.OrDefault(Either<Exception, int>.Of(0)).OrDefault(0);
+            Assert.Equal(expected: 0, actual: actual);
+            result.Fold(null, x => x.Fold(y => Assert.IsType(Type.GetType("System.OverflowException"), y), null));
         }
     }
 }
